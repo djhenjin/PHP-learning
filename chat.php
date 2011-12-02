@@ -6,17 +6,16 @@ Name: <input type="text" name="Name"></br>
 <input type="submit" value="Submit Chat!">
 </form>
 <?php
-
 $fname = "chat.txt";
-$seperator = " \n -------------------------------------- \n";
+
 
 if (isset($_POST[chatmsg]))
 {
-    $chatmsg = "\n".$_POST[chatmsg]."\n".$_POST[Name]."\n".$seperator."\n";
+    $chatmsg = "Message:</br>".$_POST["chatmsg"]."</br>User:</br>".$_POST["Name"]."</br><hr>";
    file_put_contents($fname,$chatmsg, FILE_APPEND);
 }    
 $messages = file_get_contents ($fname);
-echo $messages;
+printf("%s", $messages);
 
 
 fclose($fp);
