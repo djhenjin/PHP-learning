@@ -11,7 +11,7 @@ $fname = "chat.txt";
 
 if (isset($_POST[chatmsg]))
 {
-    $chatmsg = "Message:</br>".$_POST["chatmsg"]."</br>User:</br>".$_POST["Name"]."</br><hr>";
+    $chatmsg = "Message:\n</br>".$_POST["chatmsg"]."\n</br>User:\n</br>".$_POST["Name"]."\n</br><hr>";
    file_put_contents($fname,$chatmsg, FILE_APPEND);
 }    
 $messages = file_get_contents ($fname);
