@@ -8,15 +8,12 @@ Name: <input type="text" name="Name"></br>
 <?php
 
 $fname = "chat.txt";
-$seperator = "-------------------------------------- \n";
+$seperator = " \n -------------------------------------- \n";
 
 if (isset($_POST[chatmsg]))
 {
-    $chatmsg = $_POST[chatmsg]."\n";
-    $name = $_POST[Name]."\n";
-   file_put_contents($fname,$chatmsg , FILE_APPEND);
-   file_put_contents($fname,$name , FILE_APPEND);
-   file_put_contents($fname,$seperator , FILE_APPEND);
+    $chatmsg = "\n".$_POST[chatmsg]."\n".$_POST[Name]."\n".$seperator."\n";
+   file_put_contents($fname,$chatmsg, FILE_APPEND);
 }    
 $messages = file_get_contents ($fname);
 echo $messages;
