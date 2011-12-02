@@ -15,7 +15,7 @@
 </select>
 <input type="submit" value="Submit" />
 
-</form>
+</form> 
 
 <table border="0" width="75%" cellpadding="5" cellspacing="5">
 <tr>
