@@ -8,23 +8,20 @@ Name: <input type="text" name="Name"></br>
 <?php
 
 $fname = "chat.txt";
-$fp = fopen("chat.txt", "a+");
-if (!$fp) die("Unable to create file.");
+$seperator = "-------------------------------------- \n";
 
-fwrite($fp, "This is a test.\n");
-
-/*
-if (isset$_POST)
+if (isset($_POST[chatmsg]))
 {
-    foreach(file($fname, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line)
-        {
-            echo $line;
-        }
+    $chatmsg = $_POST[chatmsg]."\n";
+    $name = $_POST[Name]."\n";
+   file_put_contents($fname,$chatmsg , FILE_APPEND);
+   file_put_contents($fname,$name , FILE_APPEND);
+   file_put_contents($fname,$seperator , FILE_APPEND);
+}    
+$messages = file_get_contents ($fname);
+echo $messages;
 
 
-}
-    
-*/
 fclose($fp);
 
 
