@@ -13,11 +13,12 @@ class Authentication
         $login->bindParam(':username', $credentials['user']);
         $login->bindParam(':password', $credentials['passhashed']);
         $result = $login->execute();
-        if(isset($result))
+        if(result['1'] == $credentials['user'])
         {
             setcookie("session", $randkey, "0", "/", "testing.thesprocketworld.com");
             $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = ':randkey' WHERE user = :username ");
             $sessionupdate->bindparam(':randkey', $randkey);
+            $sessionupdate->bindparam(':username', $credentials['user']);
             $sessionupdate->execute();
         }
         else
