@@ -57,7 +57,7 @@ class Authentication
     
     }
     
-    public function auth($sessionid)
+    public function auth($sessionid, $user)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
@@ -65,12 +65,16 @@ class Authentication
         $auth->bindParam(':sessionid',$sessionid);
         if($auth->rowCount() == 1)
         {
-            //keep connection alive
-            
+            $newsessionid = randkey();
+            $newsessionid = checkkey($newsessionid);
+            setcookie("session", $newsessionid, time()+0, "/", "testing.thesprocketworld.com");
+            $updatesessionid = $conn->prepare ("UPDATE SET sessionid ':newid' WHERE user = :user")
+            $updatesessionid->bindParam(':newid', $newsessionid);
+            $updatesessionid->bindParam(':user', $user);
         }
         else
         {
-            //require login again
+            setcookie("session", "expired", time()+0, "/", "testing.thesprocketworld.com");
         }
     
     
@@ -161,11 +165,10 @@ class Authentication
         $checkkey->bindParam(':sessionid', $authkey);
         if (checkkey->rowCount() == 1)
         {
-            return 0;
         }
         else
         {
-            return 1;
+            return $authkey;
         }    
     
     }
