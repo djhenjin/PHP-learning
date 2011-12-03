@@ -28,9 +28,42 @@ class Authentication
    
     }
 
+    function register($usrinfo)
+    {
+        global $dbhost, $dbname, $dbuser, $dbpass;
+        try {
+        $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
+        $register = $conn->prepare ("INSERT INTO users (id,user, password, email, registrationdate, sessionid) VALUES ('', :user, :pass, :email, '','')");
+        $register->bindParam(':user', $usrinfo['0']);
+        $register->bindParam(':pass', $usrinfo['1']);
+        $register->bindParam(':email', $usrinfo['2']);
+        $register->execute();
+        }catch (PDOException $e)
+        {
+            echo "An error occured!";
+            die();
+        }
+    
+    }
+    
+    function auth($sessionid)
+    {
+        global $dbhost, $dbname, $dbuser, $dbpass;
+        $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
+        $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
+        $auth->bindParam(':sessionid',$sessionid);
+        if($auth->rowCount() == 1)
+        {
+            //keep connection alive
+            
+        }
+        else
+        {
+            //require login again
+        }
     
     
-    
+    }
     
     
     
