@@ -16,7 +16,7 @@ class Authentication
         if(isset($result))
         {
             setcookie("session", $randkey, "0", "/", "testing.thesprocketworld.com");
-            $sessionupdate = $conn->prepare ("UPDATE sessions SET user = ':user', sessionid = ':randkey' WHERE user = :username ");
+            $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = ':randkey' WHERE user = :username ");
         }
         else
         {
