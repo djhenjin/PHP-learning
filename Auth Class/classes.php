@@ -4,7 +4,7 @@ require_once("config.php");
 
 class Authentication
 {
-    public function login($credentials, $randkey)
+    public function login($credentials)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         
@@ -15,6 +15,7 @@ class Authentication
         
         if($login->rowCount() == 1)
         {
+            $randkey = randkey();
             setcookie("session", $randkey, "0", "/", "testing.thesprocketworld.com");
             $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = ':randkey' WHERE user = :username ");
             $sessionupdate->bindparam(':randkey', $randkey);
@@ -67,7 +68,7 @@ class Authentication
         {
             $newsessionid = randkey();
             $newsessionid = checkkey($newsessionid);
-            setcookie("session", $newsessionid, time()+0, "/", "testing.thesprocketworld.com");
+            setcookie("session", $newsessionid, "0", "/", "testing.thesprocketworld.com");
             $updatesessionid = $conn->prepare ("UPDATE SET sessionid ':newid' WHERE user = :user")
             $updatesessionid->bindParam(':newid', $newsessionid);
             $updatesessionid->bindParam(':user', $user);
@@ -165,6 +166,7 @@ class Authentication
         $checkkey->bindParam(':sessionid', $authkey);
         if (checkkey->rowCount() == 1)
         {
+            return this->checkkey($this->randkey());
         }
         else
         {
