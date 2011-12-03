@@ -175,20 +175,11 @@ class Authentication
         }    
     
     }
+    public function logout()
+    {
+        setcookie("session", "expired", time()+0, "/", "testing.thesprocketworld.com");
+    }    
     
-    
-    
-    
-    
-
-
 }
-
-
-
-
-
-
-
 
 ?>
