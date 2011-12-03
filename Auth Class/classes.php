@@ -33,10 +33,13 @@ class Authentication
         global $dbhost, $dbname, $dbuser, $dbpass;
         
         $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
-        $checkusr = $conn->prepare ("SELECT * FROM users WHERE user = :user OR email = :email")
+        $checkusr = $conn->prepare ("SELECT * FROM users WHERE user = :user")
         $checkusr->bindParam(':user', $usrinfo['0']);
-        $checkusr->bindParam(':email', $usrinfo['1']);
-        if($checkusr->rowCount() == 1)
+        
+        $checkemail = $conn->prepare ("SELECT * FROM users WHERE email = :email")
+        $checkusr->bindParam(':email', $usrinfo['2']);
+        
+        if($checkusr->rowCount == 1 && $checkemail->rowCount == 1) 
         {
             echo "You must enter a unique Username And Email";
         }
