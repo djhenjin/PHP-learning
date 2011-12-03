@@ -22,10 +22,11 @@ class Authentication
             $sessionupdate->bindparam(':randkey', $randkey);
             $sessionupdate->bindparam(':username', $credentials['0']);
             $sessionupdate->execute();
+            return TRUE;
         }
         else
         {
-            echo "Failed to Login, Please make sure to supply correct User and Password";
+            return FALSE;
         }
    
     }
@@ -43,7 +44,7 @@ class Authentication
         
         if($checkusr->rowCount == 1 && $checkemail->rowCount == 1) 
         {
-            echo "You must enter a unique Username And Email";
+            return FALSE;
         }
         else
         {
@@ -53,7 +54,7 @@ class Authentication
             $register->bindParam(':pass', $usrinfo['1']);
             $register->bindParam(':email', $usrinfo['2']);
             $register->execute();
-            echo "User successfully Registered";
+            return TRUE;
         }
         
     
@@ -73,10 +74,12 @@ class Authentication
             $updatesessionid = $conn->prepare ("UPDATE SET sessionid ':newid' WHERE user = :user")
             $updatesessionid->bindParam(':newid', $newsessionid);
             $updatesessionid->bindParam(':user', $user);
+            return TRUE;
         }
         else
         {
             setcookie("session", "expired", time()+0, "/", "testing.thesprocketworld.com");
+            return FALSE;
         }
     
     
