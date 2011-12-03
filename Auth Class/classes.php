@@ -17,19 +17,14 @@ class Authentication
         {
             setcookie("session", $randkey, "0", "/", "testing.thesprocketworld.com");
             $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = ':randkey' WHERE user = :username ");
+            $sessionupdate->bindparam(':randkey', $randkey);
+            $sessionupdate->execute();
         }
         else
         {
             echo "Failed to Login, Please make sure to supply correct User and Password";
         }
-            
-        
-        
-        
-        
-        
-        
-    
+   
     }
 
     
