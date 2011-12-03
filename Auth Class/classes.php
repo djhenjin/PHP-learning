@@ -153,7 +153,22 @@ class Authentication
         return $key;
     
     }
+    public function checkkey($authkey)
+    {
+        global $dbhost, $dbname, $dbuser, $dbpass;
+        $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
+        $checkkey = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
+        $checkkey->bindParam(':sessionid', $authkey);
+        if (checkkey->rowCount() == 1)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }    
     
+    }
     
     
     
