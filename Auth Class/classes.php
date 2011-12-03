@@ -4,7 +4,7 @@ require_once("config.php");
 
 class Authentication
 {
-    function login($credentials, $randkey)
+    public function login($credentials, $randkey)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         
@@ -28,25 +28,33 @@ class Authentication
    
     }
 
-    function register($usrinfo)
+    public function register($usrinfo)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
-        try {
+        
         $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
-        $register = $conn->prepare ("INSERT INTO users (id,user, password, email, registrationdate, sessionid) VALUES ('', :user, :pass, :email, '','')");
-        $register->bindParam(':user', $usrinfo['0']);
-        $register->bindParam(':pass', $usrinfo['1']);
-        $register->bindParam(':email', $usrinfo['2']);
-        $register->execute();
-        }catch (PDOException $e)
+        $checkusr = $conn->prepare ("SELECT * FROM users WHERE user = :user OR email = :email")
+        $checkusr->bindParam(':user', $usrinfo['0']);
+        $checkusr->bindParam(':email', $usrinfo['1']);
+        if($checkusr->rowCount() == 1)
         {
-            echo "An error occured!";
-            die();
+            echo "You must enter a unique Username And Email";
         }
+        else
+        {
+                
+            $register = $conn->prepare ("INSERT INTO users (id,user, password, email, registrationdate, sessionid) VALUES ('', :user, :pass, :email, '','')");
+            $register->bindParam(':user', $usrinfo['0']);
+            $register->bindParam(':pass', $usrinfo['1']);
+            $register->bindParam(':email', $usrinfo['2']);
+            $register->execute();
+            echo "User successfully Registered";
+        }
+        
     
     }
     
-    function auth($sessionid)
+    public function auth($sessionid)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
@@ -64,7 +72,7 @@ class Authentication
     
     
     }
-    function randkey()
+    public function randkey()
     {
         
         for($i = 0; $i < 20; $i++) 
