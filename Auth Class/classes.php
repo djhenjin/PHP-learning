@@ -12,13 +12,13 @@ class Authentication
         $login = $conn->prepare ("SELECT * FROM users where user = :username AND password = :password AND validation = 'TRUE' ");
         $login->bindParam(':username', $credentials['0']);
         $login->bindParam(':password', $credentials['1']);
-        
+        $login->execute();
         if($login->rowCount() == 1)
         {
             $randkey = $this->randkey();
             $randkey = $this->checkkey($randkey);
             setcookie("session", $randkey, "0", "/", "testing.thesprocketworld.com");
-            $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = ':randkey' WHERE user = :username ");
+            $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = :randkey WHERE user = :username ");
             $sessionupdate->bindparam(':randkey', $randkey);
             $sessionupdate->bindparam(':username', $credentials['0']);
             $sessionupdate->execute();
@@ -90,7 +90,7 @@ class Authentication
         $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid AND validation = 'TRUE' ");
         $auth->bindParam(':sessionid',$sessionid);
-		$result = $auth->fetch(PDO::ASSOC);
+		$result = $auth->fetch(PDO::FETCH_ASSOC);
         if($auth->rowCount() == 1)
         {
 			$user = $result['user'];

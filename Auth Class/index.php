@@ -2,6 +2,8 @@
 require_once("config.php");
 require_once("classes.php");
 $session = new Authentication();
+var_dump($session->auth($_COOKIE['session']));
+
 
 if($session->auth($_COOKIE['session'])) 
 {
@@ -47,7 +49,7 @@ else
     {
         $credentials['0'] = $_POST['username'];
         $credentials['1'] = sha1($_POST['password']);
-        if($session->login($credentials))
+        if($session->login($credentials) == TRUE)
         {
             echo "Thank you for Logging in!";
         }
