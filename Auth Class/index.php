@@ -2,7 +2,7 @@
 require_once("config.php");
 require_once("classes.php");
 $session = new Authentication();
-var_dump($session->auth($_COOKIE['session']));
+
 
 
 if($session->auth($_COOKIE['session'])) 
