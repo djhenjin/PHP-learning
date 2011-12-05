@@ -82,14 +82,16 @@ class Authentication
         }
     }
     
-    public function auth($sessionid, $user)
+    public function auth($sessionid)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
         $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid AND validation = 'TRUE' ");
         $auth->bindParam(':sessionid',$sessionid);
+		$result = $auth->fetch(PDO::ASSOC);
         if($auth->rowCount() == 1)
         {
+			$user = $result['user'];
             $newsessionid = $this->randkey();
             $newsessionid = $this->checkkey($newsessionid);
             setcookie("session", $newsessionid, "0", "/", "testing.thesprocketworld.com");
