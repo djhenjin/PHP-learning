@@ -17,7 +17,7 @@ class Authentication
         {
             $randkey = $this->randkey();
             $randkey = $this->checkkey($randkey);
-            setcookie("session", $randkey, "0", "/", "testing.thesprocketworld.com");
+            setcookie("session", $randkey, 0, "/", "testing.thesprocketworld.com");
             $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = :randkey WHERE user = :username ");
             $sessionupdate->bindparam(':randkey', $randkey);
             $sessionupdate->bindparam(':username', $credentials['0']);
@@ -96,7 +96,7 @@ class Authentication
 			$user = $result['user'];
             $newsessionid = $this->randkey();
             $newsessionid = $this->checkkey($newsessionid);
-            setcookie("session", $newsessionid, "0", "/", "testing.thesprocketworld.com");
+            setcookie("session", $newsessionid, 0, "/", "testing.thesprocketworld.com");
             $updatesessionid = $conn->prepare ("UPDATE SET sessionid ':newid' WHERE user = :user");
             $updatesessionid->bindParam(':newid', $newsessionid);
             $updatesessionid->bindParam(':user', $user);
