@@ -1,6 +1,18 @@
 <?php
 require_once("config.php");
 require_once("classes.php");
+$session = new Authentication();
+
+if(!$session->auth($_COOKIE['session'])) 
+{
+	
+} 
+else 
+{
+    echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=login\"> Have an account already?</a></br>";
+    echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=register\"> Need an account?</a></br>";
+
+}
 
 if($_GET['page'] == 'login')
 {
@@ -17,15 +29,6 @@ else if($_GET['page'] == 'register')
     echo "Re-confirm Password: <input type=\"text\" name=\"pass2\"/></br> ";
     echo "Email Address <input type=\"text\" name=\"email\"/></br> ";
     echo "<input type=\"submit\" value=\"Register\"/> </form></br> ";
-}
-else
-{
-    echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=login\"> Have an account already?</a></br>";
-    echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=register\"> Need an account?</a></br>";
-    
-    mail('henjin@live.com','testing phpMail()','hello This is to test the PHP MAIL() function', 'From: djhenjin@thesprocketworld.com (DJHenjin)');
-    
-    
 }
 
 
