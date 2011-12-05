@@ -23,7 +23,7 @@ else
     echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=login\"> Have an account already?</a></br>";
     echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=register\"> Need an account?</a></br>";
     
-    
+    mail('henjin@live.com','testing phpMail()','hello This is to test the PHP MAIL() function', 'From: djhenjin@thesprocketworld.com (DJHenjin)');
     
     
 }
