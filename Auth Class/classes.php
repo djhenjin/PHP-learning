@@ -54,7 +54,7 @@ class Authentication
             $register->bindParam(':user', $usrinfo['0']);
             $register->bindParam(':pass', $usrinfo['1']);
             $register->bindParam(':email', $usrinfo['2']);
-            $$register->bindParam(':validationkey', $validationkey);
+            $register->bindParam(':validationkey', $validationkey);
             $register->execute();
             
             return TRUE;
@@ -67,7 +67,7 @@ class Authentication
     {
         global $dbhot, $dbname, $dbuser, $dbpass;
         $conn = new PDO ('mysql:host=$dbhost;dbname=$dbname'. $dbuser, $dbpass);
-        $validate = $conn->prepare ("UPDATE users SET validation 'TRUE' WHERE validation = :emailkey");
+        $validate = $conn->prepare ("UPDATE users SET validation = 'TRUE' WHERE validation = :emailkey");
         $validate->bindParam(":emailkey", $emailkey);
         if($validate->rowcount() == 1)
         {
