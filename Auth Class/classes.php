@@ -38,9 +38,10 @@ class Authentication
         $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $checkusr = $conn->prepare ("SELECT * FROM users WHERE user = :user");
         $checkusr->bindParam(':user', $usrinfo['0']);
-        
+        $checkusr->execute();
         $checkemail = $conn->prepare ("SELECT * FROM users WHERE email = :email");
-        $checkusr->bindParam(':email', $usrinfo['2']);
+        $checkemail->bindParam(':email', $usrinfo['2']);
+        $checkemail->execute();
         
         if($checkusr->rowCount == 1 && $checkemail->rowCount == 1) 
         {
@@ -90,18 +91,20 @@ class Authentication
         $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid AND validation = 'TRUE' ");
         $auth->bindParam(':sessionid',$sessionid);
-		$result = $auth->fetch(PDO::FETCH_ASSOC);
+        $auth->execute();
         var_dump($sessionid);
         var_dump($auth->rowcount());
         if($auth->rowCount() == 1)
         {
+            $result = $auth->fetch(PDO::FETCH_ASSOC);
 			$user = $result['user'];
             $newsessionid = $this->randkey();
             $newsessionid = $this->checkkey($newsessionid);
             setcookie("session", $newsessionid, time() + 3600, "/", "testing.thesprocketworld.com");
-            $updatesessionid = $conn->prepare ("UPDATE SET sessionid ':newid' WHERE user = :user");
+            $updatesessionid = $conn->prepare ("UPDATE SET sessionid = :newid WHERE user = :user");
             $updatesessionid->bindParam(':newid', $newsessionid);
             $updatesessionid->bindParam(':user', $user);
+            $updatesessionid->execute();
             return TRUE;
         }
         else
@@ -196,6 +199,7 @@ class Authentication
         $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $checkkey = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
         $checkkey->bindParam(':sessionid', $authkey);
+        $checkkey->execute();
         if ($checkkey->rowCount() == 1)
         {
             return $this->checkkey($this->randkey());
