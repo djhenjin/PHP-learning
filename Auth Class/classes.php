@@ -50,14 +50,14 @@ class Authentication
         {
             
             $validationkey = sha1($usrinfo['0'].$this->randkey());
-            $register = $conn->prepare ("INSERT INTO users (id,user, password, email, registrationdate, sessionid, validation) VALUES ('', :user, :pass, :email, '','',:validationkey)");
+            $register = $conn->prepare ("INSERT INTO users (id,user, password, email, sessionid, validation) VALUES ('', :user, :pass, :email, '',:validationkey)");
             $register->bindParam(':user', $usrinfo['0']);
             $register->bindParam(':pass', $usrinfo['1']);
             $register->bindParam(':email', $usrinfo['2']);
             $register->bindParam(':validationkey', $validationkey);
             $register->execute();
             $message = "thank you for registering at testing.thesprocketworld.com, Please click the following link to activate your account:";
-            $message .= " testing.thesprocketworld.com/index.php?activation=".$validationkey ;
+            $message .= " http://testing.thesprocketworld.com/index.php?activation=".$validationkey ;
             mail($usrinfo['2'],'testing.thesprocketworld.com Confirmation Email',$message, 'From: djhenjin@thesprocketworld.com (DJHenjin)');
             
             return TRUE;
