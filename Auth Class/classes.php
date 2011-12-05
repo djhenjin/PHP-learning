@@ -9,7 +9,7 @@ class Authentication
         global $dbhost, $dbname, $dbuser, $dbpass;
         
         $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass );
-        $login = $conn->prepare ("SELECT * FROM users where user = :username AND password = :password");
+        $login = $conn->prepare ("SELECT * FROM users where user = :username AND password = :password AND validation = 'TRUE' ");
         $login->bindParam(':username', $credentials['0']);
         $login->bindParam(':password', $credentials['1']);
         
@@ -56,8 +56,8 @@ class Authentication
             $register->bindParam(':email', $usrinfo['2']);
             $register->bindParam(':validationkey', $validationkey);
             $register->execute();
-            $message = "thank you for registering at testing.thesprocketworld.com, Please click the following link to activate your account:"
-            $message .= " testing.thesprocketworld.com/index.php?activation".$validationkey;
+            $message = "thank you for registering at testing.thesprocketworld.com, Please click the following link to activate your account:";
+            $message .= " testing.thesprocketworld.com/index.php?activation=".$validationkey ;
             mail($usrinfo['2'],'testing.thesprocketworld.com Confirmation Email',$message, 'From: djhenjin@thesprocketworld.com (DJHenjin)');
             
             return TRUE;
@@ -86,7 +86,7 @@ class Authentication
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
-        $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
+        $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid AND validation = 'TRUE' ");
         $auth->bindParam(':sessionid',$sessionid);
         if($auth->rowCount() == 1)
         {
