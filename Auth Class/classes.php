@@ -49,11 +49,12 @@ class Authentication
         else
         {
             
-            
-            $register = $conn->prepare ("INSERT INTO users (id,user, password, email, registrationdate, sessionid) VALUES ('', :user, :pass, :email, '','')");
+            $validationkey = sha1($usrinfo['0'].$this->randkey());
+            $register = $conn->prepare ("INSERT INTO users (id,user, password, email, registrationdate, sessionid, validation) VALUES ('', :user, :pass, :email, '','',:validationkey)");
             $register->bindParam(':user', $usrinfo['0']);
             $register->bindParam(':pass', $usrinfo['1']);
             $register->bindParam(':email', $usrinfo['2']);
+            $$register->bindParam(':validationkey', $validationkey);
             $register->execute();
             
             return TRUE;
