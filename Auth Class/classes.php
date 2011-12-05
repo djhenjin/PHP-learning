@@ -68,7 +68,7 @@ class Authentication
     
     public function checkemailconf($emailkey)
     {
-        global $dbhot, $dbname, $dbuser, $dbpass;
+        global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO (  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $validate = $conn->prepare ("UPDATE users SET validation = 'TRUE' WHERE validation = :emailkey");
         $validate->bindParam(":emailkey", $emailkey);
