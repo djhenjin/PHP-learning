@@ -8,7 +8,7 @@ class Authentication
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         
-        $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass );
+        $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $login = $conn->prepare ("SELECT * FROM users where user = :username AND password = :password AND validation = 'TRUE' ");
         $login->bindParam(':username', $credentials['0']);
         $login->bindParam(':password', $credentials['1']);
@@ -35,7 +35,7 @@ class Authentication
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         
-        $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
+        $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $checkusr = $conn->prepare ("SELECT * FROM users WHERE user = :user");
         $checkusr->bindParam(':user', $usrinfo['0']);
         
@@ -69,7 +69,7 @@ class Authentication
     public function checkemailconf($emailkey)
     {
         global $dbhot, $dbname, $dbuser, $dbpass;
-        $conn = new PDO ('mysql:host=$dbhost;dbname=$dbname'. $dbuser, $dbpass);
+        $conn = new PDO (  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $validate = $conn->prepare ("UPDATE users SET validation = 'TRUE' WHERE validation = :emailkey");
         $validate->bindParam(":emailkey", $emailkey);
         if($validate->rowcount() == 1)
@@ -84,8 +84,9 @@ class Authentication
     
     public function auth($sessionid)
     {
+		if(empty($sessionid)) return FALSE;
         global $dbhost, $dbname, $dbuser, $dbpass;
-        $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
+        $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid AND validation = 'TRUE' ");
         $auth->bindParam(':sessionid',$sessionid);
 		$result = $auth->fetch(PDO::ASSOC);
@@ -189,7 +190,7 @@ class Authentication
     public function checkkey($authkey)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
-        $conn = new PDO('mysql:host=$dbhost;dbname=$dbname', $dbuser, $dbpass);
+        $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $checkkey = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
         $checkkey->bindParam(':sessionid', $authkey);
         if ($checkkey->rowCount() == 1)
