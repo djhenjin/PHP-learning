@@ -48,12 +48,14 @@ class Authentication
         }
         else
         {
-                
+            
+            
             $register = $conn->prepare ("INSERT INTO users (id,user, password, email, registrationdate, sessionid) VALUES ('', :user, :pass, :email, '','')");
             $register->bindParam(':user', $usrinfo['0']);
             $register->bindParam(':pass', $usrinfo['1']);
             $register->bindParam(':email', $usrinfo['2']);
             $register->execute();
+            
             return TRUE;
         }
         
