@@ -60,8 +60,8 @@ else
     }
     else if($_GET['activation'])
     {
-        $activationkey = $_GET['activation'];
-        if($session->checkemailconf($activationkey))
+        
+        if($session->checkemailconf($_GET['activation']))
         {
             echo "Your account has been activated";
         }

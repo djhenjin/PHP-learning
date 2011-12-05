@@ -72,6 +72,7 @@ class Authentication
         $conn = new PDO (  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $validate = $conn->prepare ("UPDATE users SET validation = 'TRUE' WHERE validation = :emailkey");
         $validate->bindParam(":emailkey", $emailkey);
+        $validate->execute();
         if($validate->rowcount() == 1)
         {
             return TRUE;
