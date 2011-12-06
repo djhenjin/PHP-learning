@@ -8,7 +8,8 @@ $chat = new Chat();
 
 if($session->auth($_COOKIE['session'])) 
 {
-	echo " <a href=\"http://testing.thesprocketworld.com/index.php?action=logout\"> Logout</a>";
+	echo " <a href=\"http://testing.thesprocketworld.com/index.php?action=logout\"> Logout</a></br>";
+    echo " <a href=\"http://testing.thesprocketworld.com/index.php\"> Refresh This Page</a></br>";
     if($_GET['action'] == 'logout')
     {
         $session->logout();
@@ -38,15 +39,15 @@ else
     {
         echo " <form name=\"login\" action=\"index.php?action=login\" method=\"post\"> ";
         echo " Username: <input type=\"text\" name=\"username\"/> </br> ";
-        echo " Password: <input type=\"text\" name=\"password\"/> </br> ";
+        echo " Password: <input type=\"password\" name=\"password\"/> </br> ";
         echo " <input type=\"submit\" value=\"Login\" /> </br> </form> ";
     }
     else if($_GET['page'] == 'register')
     {
         echo "<form name=\"register\" action=\"index.php?action=register\" method=\"post\"> ";
         echo "Desired Username: <input type=\"text\" name=\"username\"/></br> ";
-        echo "Password: <input type=\"text\" name=\"pass1\"/></br> ";
-        echo "Re-confirm Password: <input type=\"text\" name=\"pass2\"/></br> ";
+        echo "Password: <input type=\"password\" name=\"pass1\"/></br> ";
+        echo "Re-confirm Password: <input type=\"password\" name=\"pass2\"/></br> ";
         echo "Email Address <input type=\"text\" name=\"email\"/></br> ";
         echo "<input type=\"submit\" value=\"Register\"/> </form></br> ";
     }

@@ -17,6 +17,7 @@ class Authentication
         {
             $randkeytmp = $this->randkey();
             $randkey = $this->checkkey($randkeytmp);
+            $randkey .= ":".$credentials['0'];
             setcookie("session", $randkey, time() + 3600  , "/", "testing.thesprocketworld.com");
             $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = :randkey WHERE user = :username ");
             $sessionupdate->bindparam(':randkey', $randkey);
@@ -99,6 +100,7 @@ class Authentication
 			$user = $result['user'];
             $newsess = $this->randkey();
             $newsessionid = $this->checkkey($newsess);
+            $newsessionid .= ":".$user;
             setcookie("session", $newsessionid, time() + 3600, "/", "testing.thesprocketworld.com");
             $updatesessionid = $conn->prepare ("UPDATE users SET sessionid = :newid WHERE user = :user");
             $updatesessionid->bindParam(':newid', $newsessionid);
@@ -215,16 +217,9 @@ class Authentication
     }    
     public function loggedin($sessionid)
     {
-        global $dbhost, $dbname, $dbuser, $dbpass;
-        $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
-        $logged = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
-        $logged->bindParam(':sessionid', $sessionid);
-        $test = $logged->execute();
-        $result = $logged->fetch(PDO::FETCH_ASSOC);
-        $user = $result['user'];
-        var_dump($sessionid);
-        die();
-        return $test;
+        $logged = explode(":",$sessionid);
+        
+        return $logged['1'];
         
     }
 }
