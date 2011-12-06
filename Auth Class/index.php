@@ -1,8 +1,9 @@
 <?php
 require_once("config.php");
-require_once("classes.php");
+require_once("authentication.php");
+require_once("chat.php");
 $session = new Authentication();
-
+$chat = new Chat();
 
 
 if($session->auth($_COOKIE['session'])) 
@@ -13,6 +14,18 @@ if($session->auth($_COOKIE['session']))
         $session->logout();
         header("Location: index.php?msg=loggedout");
     }    
+
+    echo "<form name=\"chat\" action=\"index.php\" method=\"post\">";
+    echo "Message: <textarea rows=\"10\" cols=\"40\" wrap=\"physical\" name=\"chatmsg\"></textarea></br>";
+    echo "<input type=\"submit\" value=\"Submit Chat!\"></form>";
+    if(isset($_GET['chatmsg']))
+    {
+        $message = $_POST['chatmsg'];
+        $user = $session->loggedin($_COOKIE['session']);
+        $chat->submitchat($user, $message);
+        echo $user;
+    }
+    $chat->displaychat();
 } 
 else 
 {
