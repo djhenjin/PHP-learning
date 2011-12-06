@@ -10,6 +10,7 @@ class Mutex
     }
     public function lock() {
 	$locked = FALSE;
+	sleep(mt_rand(0, 3));
 	while($locked != TRUE) {
             $locks = file_get_contents("mutex.locks");
             $locks = explode("\r\n", $locks);
