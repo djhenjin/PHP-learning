@@ -10,7 +10,7 @@ class Chat
         
         $db = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
 
-        $stmt1 = $db->prepare ("INSERT INTO messages (id, message, user) VALUES ('', :message,:user)");
+        $stmt1 = $db->prepare ("INSERT INTO messages (id, message, user) VALUES ('', :message,:user)"); // "INSERT INTO messages (message, user) VALUES (:messgae, :user)" should be the query.
         $stmt1->bindParam(':message', $message);
         $stmt1->bindParam(':user', $user);
         $stmt1->execute();
