@@ -14,7 +14,7 @@ class Mutex
             $locks = file_get_contents("mutex.locks");
             $locks = explode("\r\n", $locks);
             if(array_search($this->mutexname, $locks, TRUE) !== FALSE) {
-	        $locked = FALSE;	
+	        $locked = FALSE;
 	    } else {
                 file_put_contents("mutex.locks", $this->mutexname . "\r\n", FILE_APPEND | LOCK_EX);
 	        $locked = TRUE;

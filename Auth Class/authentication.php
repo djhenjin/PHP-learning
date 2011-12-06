@@ -105,11 +105,11 @@ class Authentication
             $newsess = $this->randkey();
             $newsessionid = $this->checkkey($newsess);
             $newsessionid .= ":".$user;
-            setcookie("session", $newsessionid, time() + 3600, "/", "testing.thesprocketworld.com");
             $updatesessionid = $conn->prepare ("UPDATE users SET sessionid = :newid WHERE user = :user");
             $updatesessionid->bindParam(':newid', $newsessionid);
             $updatesessionid->bindParam(':user', $user);
             $updatesessionid->execute();
+            setcookie("session", $newsessionid, time() + 3600, "/", "testing.thesprocketworld.com");
             var_dump(file_get_contents("mutex.locks"));
             $mutex->unlock();
             return TRUE;
