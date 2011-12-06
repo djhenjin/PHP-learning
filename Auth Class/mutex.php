@@ -9,8 +9,8 @@ class Mutex
         $this->mutexname = $mutexname;
     }
     public function lock() {
-        $locks = file_get_contents("mutex.locks");
 	while($locked != TRUE) {
+            $locks = file_get_contents("mutex.locks");
             if(strstr($locks, $this->mutexname) == FALSE) {
 	        $locked = FALSE;	
 	    } else {
