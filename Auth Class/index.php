@@ -18,12 +18,12 @@ if($session->auth($_COOKIE['session']))
     echo "<form name=\"chat\" action=\"index.php\" method=\"post\">";
     echo "Message: <textarea rows=\"10\" cols=\"40\" wrap=\"physical\" name=\"chatmsg\"></textarea></br>";
     echo "<input type=\"submit\" value=\"Submit Chat!\"></form>";
-    if(isset($_GET['chatmsg']))
+    if(isset($_POST['chatmsg']))
     {
         $message = $_POST['chatmsg'];
         $user = $session->loggedin($_COOKIE['session']);
         $chat->submitchat($user, $message);
-        echo $user;
+        
     }
     $chat->displaychat();
 } 
