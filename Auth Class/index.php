@@ -7,7 +7,12 @@ $session = new Authentication();
 
 if($session->auth($_COOKIE['session'])) 
 {
-	
+	echo " <a href=\"http://testing.thesprocketworld.com/index.php?action=logout\"> Logout</a>";
+    if($_GET['action'] == 'logout')
+    {
+        $session->logout();
+        header("Location: index.php?msg=loggedout");
+    }    
 } 
 else 
 {
@@ -51,7 +56,7 @@ else
         $credentials['1'] = sha1($_POST['password']);
         if($session->login($credentials) == TRUE)
         {
-            echo "Thank you for Logging in!";
+            header("Location: index.php?msg=loggedin");
         }
         else
         {
@@ -73,6 +78,7 @@ else
         }
     
     }
+    
 
 }
 
