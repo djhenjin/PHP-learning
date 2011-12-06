@@ -1,6 +1,6 @@
 <?php
 require_once("config.php");
-
+require_once("mutex.php");
 
 class Authentication
 {
@@ -88,6 +88,9 @@ class Authentication
     public function auth($sessionid)
     {
 		if(empty($sessionid)) return FALSE;
+        $username = $this->loggedin($_COOKIE['session']);
+        $mutex = new Mutex($username);
+        $mutex->lock();
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid AND validation = 'TRUE' ");
@@ -106,6 +109,7 @@ class Authentication
             $updatesessionid->bindParam(':newid', $newsessionid);
             $updatesessionid->bindParam(':user', $user);
             $updatesessionid->execute();
+            $mutex->unlock();
             return TRUE;
         }
         else
