@@ -88,15 +88,16 @@ class Authentication
     public function auth($sessionid)
     {
 		if(empty($sessionid)) return FALSE;
+        var_dump($sessionid);
         $username = $this->loggedin($_COOKIE['session']);
         $mutex = new Mutex($username);
+        var_dump(file_get_contents("mutex.locks"));
         $mutex->lock();
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $auth = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid AND validation = 'TRUE' ");
         $auth->bindParam(':sessionid',$sessionid);
         $auth->execute();
-        $auth->rowcount();
         if($auth->rowCount() == 1)
         {
             $result = $auth->fetch(PDO::FETCH_ASSOC);
@@ -109,12 +110,13 @@ class Authentication
             $updatesessionid->bindParam(':newid', $newsessionid);
             $updatesessionid->bindParam(':user', $user);
             $updatesessionid->execute();
+            var_dump(file_get_contents("mutex.locks"));
             $mutex->unlock();
             return TRUE;
         }
         else
         {
-            setcookie("session", "expired", time()+0, "/", "testing.thesprocketworld.com");
+            //setcookie("session", "expired", time()+0, "/", "testing.thesprocketworld.com");
             $mutex->unlock();
             return FALSE;
         }
