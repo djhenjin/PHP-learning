@@ -218,12 +218,15 @@ class Authentication
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO(  'mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
-        $loggedin = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
-        $loggedin->bindParam(':sessionid', $sessionid);
-        $loggedin->execute();
-        $result = $loggedin->fetch(PDO::FETCH_ASSOC);
+        $logged = $conn->prepare ("SELECT * FROM users WHERE sessionid = :sessionid");
+        $logged->bindParam(':sessionid', $sessionid);
+        $test = $logged->execute();
+        $result = $logged->fetch(PDO::FETCH_ASSOC);
         $user = $result['user'];
-        return $user;
+        var_dump($sessionid);
+        die();
+        return $test;
+        
     }
 }
 
