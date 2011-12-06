@@ -116,7 +116,7 @@ class Authentication
         }
         else
         {
-            //setcookie("session", "expired", time()+0, "/", "testing.thesprocketworld.com");
+            setcookie("session", "expired", time()+0, "/", "testing.thesprocketworld.com");
             $mutex->unlock();
             return FALSE;
         }
