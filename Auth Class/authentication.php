@@ -18,6 +18,7 @@ class Authentication
             $randkeytmp = $this->randkey();
             $randkey = $this->checkkey($randkeytmp);
             $randkey .= ":".$credentials['0'];
+            $randkey .= ":".time() + 300;
             setcookie("session", $randkey, time() + 3600  , "/", "testing.thesprocketworld.com");
             $sessionupdate = $conn->prepare ("UPDATE users SET sessionid = :randkey WHERE user = :username ");
             $sessionupdate->bindparam(':randkey', $randkey);
@@ -100,17 +101,23 @@ class Authentication
         $auth->execute();
         if($auth->rowCount() == 1)
         {
-            $result = $auth->fetch(PDO::FETCH_ASSOC);
-			$user = $result['user'];
-            $newsess = $this->randkey();
-            $newsessionid = $this->checkkey($newsess);
-            $newsessionid .= ":".$user;
-            $updatesessionid = $conn->prepare ("UPDATE users SET sessionid = :newid WHERE user = :user");
-            $updatesessionid->bindParam(':newid', $newsessionid);
-            $updatesessionid->bindParam(':user', $user);
-            $updatesessionid->execute();
-            setcookie("session", $newsessionid, time() + 3600, "/", "testing.thesprocketworld.com");
-            var_dump(file_get_contents("mutex.locks"));
+            $timestamp = $this->loggedin($_COOKIE['session']);
+            $timestamp = $timestamp['2'];
+            if($timestamp < time())
+            {
+                $result = $auth->fetch(PDO::FETCH_ASSOC);
+                $user = $result['user'];
+                $newsess = $this->randkey();
+                $newsessionid = $this->checkkey($newsess);
+                $newsessionid .= ":".$user;
+                $newsessionid .= ":".time() +300;
+                $updatesessionid = $conn->prepare ("UPDATE users SET sessionid = :newid WHERE user = :user");
+                $updatesessionid->bindParam(':newid', $newsessionid);
+                $updatesessionid->bindParam(':user', $user);
+                $updatesessionid->execute();
+                setcookie("session", $newsessionid, time() + 3600, "/", "testing.thesprocketworld.com");
+                var_dump(file_get_contents("mutex.locks"));
+            }    
             $mutex->unlock();
             return TRUE;
         }
@@ -226,7 +233,7 @@ class Authentication
     {
         $logged = explode(":",$sessionid);
         
-        return $logged['1'];
+        return $logged;
         
     }
 }

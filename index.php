@@ -1,66 +1,110 @@
-<form name="selectleaderboard" action="index.php" method="post">
-<select name="test">
-<option value="ALL.mcmmo">All</option>
-<option value="ARCHERY.mcmmo">Archery</option>
-<option value="ACROBATICS.mcmmo">Acrobatics</option>
-<option value="AXES.mcmmo">Axes</option>
-<option value="EXCAVATION.mcmmo">Excavation</option>
-<option value="HERBALISM.mcmmo">Herbalism</option>
-<option value="MINING.mcmmo">Mining</option>
-<option value="REPAIR.mcmmo">Repair</option>
-<option value="SWORDS.mcmmo">Swords</option>
-<option value="TAMING.mcmmo">Taming</option>
-<option value="UNARMED.mcmmo">Unarmed</option>
-<option value="WOODCUTTING.mcmmo">Woodcutting</option>
-</select>
-<input type="submit" value="Submit" />
-
-</form> 
-
-<table border="0" width="75%" cellpadding="5" cellspacing="5">
-<tr>
-<td align="center">Player</td>
-<td align="center">Score</td>
-</tr>
-
-
 <?php
-//------------------------------------------------------------------//
-// $dir is the only thing you need to change to have this script working on your server
-//change /var/www/.../testing/datadir to /path/to/your/Leaderboard folder in your MCMMO folder
-//$dir is case sensitive so make sure you get the case right.
-$dir = "/var/www/vhosts/thesprocketworld.com/thesprocketworld.com/httpdocs/subdomains/testing/datadir";
-//in between the <?php tag and the bottom of the file to use HTML code you must use it in the following format
-// echo "<h1>header1</h1>"; above the <?php tag you can use raw HTML as normal
-chdir($dir);
+ob_start();
+require_once("config.php");
+require_once("authentication.php");
+require_once("chat.php");
+$session = new Authentication();
+$chat = new Chat();
 
-    
-    $selection = $_POST[test];
-    if (empty($selection))
+
+if($session->auth($_COOKIE['session'])) 
+{
+	echo " <a href=\"http://testing.thesprocketworld.com/index.php?action=logout\"> Logout</a></br>";
+    echo " <a href=\"http://testing.thesprocketworld.com/index.php\"> Refresh This Page</a></br>";
+    if($_GET['action'] == 'logout')
     {
-        $selection = "ALL.mcmmo";
-    }
-    $leaderboard = explode('.', $selection);
-    $str = mb_convert_case($leaderboard[0], MB_CASE_TITLE, "UTF-8");
-    echo "You are vieweing: $str </br>";
+        $session->logout();
+        header("Location: index.php?msg=loggedout");
+    }    
+
     
-    $fname = $dir."/".$selection;
-    foreach(file($fname, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line)
+    echo "<form name=\"chat\" action=\"index.php\" method=\"post\">";
+    echo "Message: <textarea rows=\"10\" cols=\"40\" wrap=\"physical\" name=\"chatmsg\"></textarea></br>";
+    echo "<input type=\"submit\" value=\"Submit Chat!\"></form>";
+    if(isset($_POST['chatmsg']))
+    {
+        $message = $_POST['chatmsg'];
+        $sessionid = $_COOKIE['session'];
+        $user = $session->loggedin($sessionid);
+        $chat->submitchat($user['1'], $message);
+        
+    }
+    $chat->displaychat();
+} 
+else 
+{
+    echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=login\"> Have an account already?</a></br>";
+    echo "<a href=\"http://testing.thesprocketworld.com/index.php?page=register\"> Need an account?</a></br>";
+
+    if($_GET['page'] == 'login')
+    {
+        echo " <form name=\"login\" action=\"index.php?action=login\" method=\"post\"> ";
+        echo " Username: <input type=\"text\" name=\"username\"/> </br> ";
+        echo " Password: <input type=\"password\" name=\"password\"/> </br> ";
+        echo " <input type=\"submit\" value=\"Login\" /> </br> </form> ";
+    }
+    else if($_GET['page'] == 'register')
+    {
+        echo "<form name=\"register\" action=\"index.php?action=register\" method=\"post\"> ";
+        echo "Desired Username: <input type=\"text\" name=\"username\"/></br> ";
+        echo "Password: <input type=\"password\" name=\"pass1\"/></br> ";
+        echo "Re-confirm Password: <input type=\"password\" name=\"pass2\"/></br> ";
+        echo "Email Address <input type=\"text\" name=\"email\"/></br> ";
+        echo "<input type=\"submit\" value=\"Register\"/> </form></br> ";
+    }
+    else if($_GET['action'] == 'register')
+    {
+        $usrinfo['0'] = $_POST['username'];
+        $usrinfo['1'] = sha1($_POST['pass1']);
+        $usrinfo['2'] = $_POST['email'];
+        if($session->register($usrinfo))
         {
-        $exploded = explode(':', $line);
-        $lines[] = $exploded;
-        $lsort[] = $exploded[1];
+            echo "Thank you for registering!";
         }
-
-        array_multisort($lsort, SORT_DESC, SORT_NUMERIC, $lines);
-
-        foreach($lines as $row)
+        else
         {
-            echo '<tr>';
-            echo '<td align="center">'.$row[0].'</td>';
-            echo '<td align="center">'.$row[1].'</td>';
-            echo '</tr>';
-
+            echo "Please <a href=\"testing.thesprocketworld.com/index.php?page=register\"> Try Again</a>";
         }
+        
+    }
+    else if($_GET['action'] == 'login')
+    {
+        $credentials['0'] = $_POST['username'];
+        $credentials['1'] = sha1($_POST['password']);
+        if($session->login($credentials) == TRUE)
+        {
+            header("Location: index.php?msg=loggedin");
+        }
+        else
+        {
+            echo "A Problem occured, Please <a href=\"http://testing.thesprocketworld.com/index.php?page=login\"> Try again</a></br>";
+            echo "Or check your email for the Activation Link.";
+        }
+    
+    }
+    else if($_GET['activation'])
+    {
+        
+        if($session->checkemailconf($_GET['activation']))
+        {
+            echo "Your account has been activated";
+        }
+        else
+        {
+            echo "Something went wrong, Please try that again or contact the administrator";
+        }
+    
+    }
+    
 
+}
+
+
+
+
+
+
+
+
+ob_end_flush();
 ?>
