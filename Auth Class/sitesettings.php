@@ -58,10 +58,19 @@ class SiteSettings
         
         
     }
-    
-    
-    
-    
+    public function ModifySite($siteid, $modifications)
+    {
+        //function to modify a users site, needs to be created, currently placeholder.
+    }
+    public function UpdateUserBalance($userid, $modifications)
+    {
+        //function to update users balance, needs to be created, currently placeholder.
+    }
+    public function UpdateSiteBalance($siteid, $modifications
+    {
+        //function to update sites balance, needs to be created, currently placeholder.
+    }
+    //should cover all remaining functions for this class. if any more need to be added, push to this file in above manner.
     
     
     
