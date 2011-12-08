@@ -22,7 +22,7 @@ class SiteSettings
         $site = $showsite->execute();
         foreach($site as $results);
         {
-            echo $results; 
+            echo $results;
         }
         
     }
