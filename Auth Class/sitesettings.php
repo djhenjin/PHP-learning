@@ -41,7 +41,23 @@ class SiteSettings
         $newsite->bindParam(':advertiser',$advertiserid);
         
     }
-    
+    public function AssignVisits($siteid, $visits)
+    {
+        global $dbhost, $dbname, $dbuser, $dbpass;
+        $conn = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
+        $currentviews = $conn->prepare("SELECT ViewsRemaining FROM sites WHERE SiteID = :siteid");
+        $currentviews->bindParam(':siteid', $siteid);
+        $currentviews->execute();
+        $result = $currentviews(PDO::FETCH_ASSOC);
+        $visitsadd = $result['ViewsRemaining'] + $visits;
+        
+        $assignviews = $conn->prepare("UPDATE sites SET ViewsRemaining = :visits WHERE SiteID = :siteid");
+        $assignviews->bindParam(':visits', $visitsadd);
+        $assignviews->bindParam(':siteid', $siteid);
+        $assignviews->execute();
+        
+        
+    }
     
     
     
