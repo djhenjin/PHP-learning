@@ -13,12 +13,12 @@ class SiteSettings
         $updateviews->execute();
         
     }
-    public function ViewSite($siteid)
+    public function ViewSite($userid)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
-        $showsite = $conn->prepare("SELECT * FROM sites WHERE SiteID = :siteid");
-        $showsite->bindParam(':siteid', $siteid);
+        $showsite = $conn->prepare("SELECT * FROM sites WHERE AdvertiserID = :advertiserid");
+        $showsite->bindParam(':advertiserid', $userid);
         $site = $showsite->execute();
         foreach($site as $results);
         {
@@ -26,26 +26,45 @@ class SiteSettings
         }
         
     }
-
+    public function AddSite($siteinfo $holder $only $so $far)
+    {
+        global $dbhost, $dbname, $dbuser, $dbpass;
+        $conn = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
+        $newsite = $conn->prepare("INSERT INTO sites (SiteName, SiteUrl, ViewsRemaining, DayViewLimit, ViewLength, Balance)
+        (:sitename, :siteurl, :viewsremain, :daylimit, :length, :balance) WHERE AdvertiserID = :advertiser");
+        $newsite->bindParam(':sitename',$sitename);
+        $newsite->bindParam(':siteurl',$siteurl);
+        $newsite->bindParam(':viewsremain',$viewsremain);
+        $newsite->bindParam(':daylimit',$daylimit);
+        $newsite->bindParam(':length',$length);
+        $newsite->bindParam(':balance',$balance);
+        $newsite->bindParam(':advertiser',$advertiserid);
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
