@@ -26,7 +26,7 @@ class SiteSettings
         }
         
     }
-    public function AddSite($siteinfo $holder $only $so $far)
+    public function AddSite($sitename, $siteurl, $viewsremain, $daylimit, $length, $balance, $advertiserid)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
         $conn = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
