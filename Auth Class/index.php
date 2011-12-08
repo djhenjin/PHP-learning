@@ -1,4 +1,6 @@
 <?php
+header('Refresh: 120');
+
 ob_start();
 require_once("config.php");
 require_once("authentication.php");
@@ -26,7 +28,7 @@ if($session->auth($_COOKIE['session']))
         $message = $_POST['chatmsg'];
         $sessionid = $_COOKIE['session'];
         $user = $session->loggedin($sessionid);
-        $chat->submitchat($user, $message);
+        $chat->submitchat($user['1'], $message);
         
     }
     $chat->displaychat();

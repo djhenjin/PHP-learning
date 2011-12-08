@@ -1,6 +1,5 @@
 <?php
 require_once("config.php");
-require_once("mutex.php");
 
 class Authentication
 {
@@ -60,7 +59,7 @@ class Authentication
             $register->bindParam(':validationkey', $validationkey);
             $register->execute();
             $message = "thank you for registering at testing.thesprocketworld.com, Please click the following link to activate your account:";
-            $message .= " http://testing.thesprocketworld.com/index.php?activation=".$validationkey ;
+            $message .= " http://testing.thesprocketworld.com/index.php?activate=".$validationkey ;
             mail($usrinfo['2'],'testing.thesprocketworld.com Confirmation Email',$message, 'From: djhenjin@thesprocketworld.com (DJHenjin)');
             
             return TRUE;
