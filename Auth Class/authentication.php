@@ -63,7 +63,7 @@ class Authentication
                 $referID->bindParam(':referer', ((isset($_GET['ref']) ? $_GET['ref'] : $_COOKIE['referer']));
                 $referID->execute();
                 $results = $referID->fetch(PDO::FETCH_ASSOC);
-                $referer = $results['user'];
+                $referer = $results['id'];
                 
             }
             else
