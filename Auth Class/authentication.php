@@ -79,11 +79,12 @@ class Authentication
                 $referer = 0;
             }
             $validationkey = sha1($usrinfo['0'].$this->randkey());
-            $register = $conn->prepare ("INSERT INTO users (id,user, password, email, sessionid, validation) VALUES ('', :user, :pass, :email, '',:validationkey)");
+            $register = $conn->prepare ("INSERT INTO users (id,user, password, email, sessionid, validation, referedBy) VALUES ('', :user, :pass, :email, '',:validationkey,:referer)");
             $register->bindParam(':user', $usrinfo['0']);
             $register->bindParam(':pass', $usrinfo['1']);
             $register->bindParam(':email', $usrinfo['2']);
             $register->bindParam(':validationkey', $validationkey);
+            $register->bindParam(':referer', $referer);
             $register->execute();
             $message = "thank you for registering at testing.thesprocketworld.com, Please click the following link to activate your account:";
             $message .= " http://testing.thesprocketworld.com/index.php?activate=".$validationkey ;
