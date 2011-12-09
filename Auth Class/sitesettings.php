@@ -47,7 +47,7 @@ class SiteSettings
 				return "User does not exist!";
 			}
 			$Query = $conn->prepare("SELECT * FROM users WHERE id = :RefID");
-			$Query->bindParam(':RefID', $user->Referrer);
+			$Query->bindParam(':RefID', $user->referredBy);
 			if($Query->rowCount() == 1) {
 				$referrer = $Query->fetch(PDO::FETCH_OBJ);
 			} else {
