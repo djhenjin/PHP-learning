@@ -26,6 +26,82 @@ class SiteSettings
         }
 	return $result;
     }
+    public function VisitSite($SiteID, $UserID) {
+	$visitprice = 0.09;
+	$paidforvisit = 0.035;
+	$conn = new PDO('mysq:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
+	$Query = $conn->prepare("SELECT * FROM sites WHERE SiteID = :SiteID");
+	$Query->bindParam(':SiteID', $SiteID);
+	$Query->execute();
+	if($Query->rowCount() == 1) {
+		$site = $Query->fetch(PDO::FETCH_OBJ);
+		if($site->DayViewLimit >= $site->ViewsToday) {
+			return "Viewing not possible anymore!"
+		}
+		if($site->Balance > ($visitprice * ($site->ViewLength / 10))) {
+			$Query = $conn->prepare("SELECT * FROM users WHERE id = :UserID");
+			$Query->bindParam(':UserID', $UserID);
+			if($Query->rowCount() == 1) {
+				$user = $Query->fetch(PDO::FETCH_OBJ);
+			} else {
+				return "User does not exist!";
+			}
+			$Query = $conn->prepare("SELECT * FROM users WHERE id = :RefID");
+			$Query->bindParam(':RefID', $user->Referrer);
+			if($Query->rowCount() == 1) {
+				$referrer = $Query->fetch(PDO::FETCH_OBJ);
+			} else {
+				$referrer = NULL;
+			}
+			if($site->ViewLength == 10) {
+				if($site->Balance >= $visitprice) {
+					$site->Balance -= $visitprice;
+					$user->Balance += $paidforvisit;
+					if($referrer != NULL) {
+						$referrer->Balance += 0.01;
+					}
+				} else {
+					return "Site owner does not have enough balance!";
+				}
+			} else if($site->ViewLength == 20) {
+				if($site->Balance >= $visitprice * 2) {
+					$site->Balance -= ($visitprice * 2);
+					$user->Balance += ($paidforvisit * 2);
+					if($referrer != NULL) {
+						$referrer->Balance += 0.02;
+					}
+				} else {
+					return "Site owner does not have enough balance!";
+				}
+			} else if($site->ViewLength == 30) {
+				if($site->Balance >= $visitprice * 3) {
+					$site->Balance -= ($visitprice * 3);
+					$user->Balance += ($paidforvisit * 3);
+					if($referrer != NULL) {
+						$referrer->Balance += 0.03;
+					}
+				} else {
+					return "Site owner does not have enough balance!";
+				}
+			} else if($site->ViewLenght == 60) {
+				if($site->Balance >= $visitprice * 6) {
+					$site->Balance -= ($visitprice * 6);
+					$user->Balance += ($paidforvisit * 3);
+					if($referrer != NULL) {
+						$referrer->Balance += 0.06;
+					}
+				} else {
+					return "Site owner does not have enough balance!";
+				}
+			}
+			// Update balances, etc in the db.
+		} else {
+			return "Site can not be shown. Not enough balance!";
+		}
+	} else {
+		return "Site Does not Exist!";
+	}
+    }
     public function AddSite($sitename, $siteurl, $viewsremain, $daylimit, $length, $balance, $advertiserid)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
