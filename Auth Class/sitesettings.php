@@ -19,12 +19,12 @@ class SiteSettings
         $conn = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $showsite = $conn->prepare("SELECT * FROM sites WHERE AdvertiserID = :advertiserid");
         $showsite->bindParam(':advertiserid', $userid);
-        $site = $showsite->execute();
-        foreach($site as $results);
-        {
-            echo $results;
+        $showsite->execute();
+	$result = array();
+        for($i = 0; $i < $showsite->rowCount(); $i++) {
+		$result[i] = $showsite->fetch(PDO::FETCH_OBJ);
         }
-        
+	return $result;
     }
     public function AddSite($sitename, $siteurl, $viewsremain, $daylimit, $length, $balance, $advertiserid)
     {
@@ -44,6 +44,7 @@ class SiteSettings
     public function AssignVisits($siteid, $visits)
     {
         global $dbhost, $dbname, $dbuser, $dbpass;
+	/*
         $conn = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname . '', $dbuser, $dbpass);
         $currentviews = $conn->prepare("SELECT ViewsRemaining FROM sites WHERE SiteID = :siteid");
         $currentviews->bindParam(':siteid', $siteid);
@@ -55,8 +56,12 @@ class SiteSettings
         $assignviews->bindParam(':visits', $visitsadd);
         $assignviews->bindParam(':siteid', $siteid);
         $assignviews->execute();
-        
-        
+    	*/
+	$conn = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
+	$site = $conn->prepare("UPDTE sites SET ViewsRemaining += :visits WHERE SiteID = :siteid");
+	$site->bindParam(':visits', $visits);
+	$site->bindParam(':siteid', $siteid);
+	$site->execute();
     }
     public function ModifySite($siteid, $modifications)
     {
@@ -66,24 +71,12 @@ class SiteSettings
     {
         //function to update users balance, needs to be created, currently placeholder.
     }
-    public function UpdateSiteBalance($siteid, $modifications
+    public function UpdateSiteBalance($siteid, $modifications)
     {
+	
         //function to update sites balance, needs to be created, currently placeholder.
     }
     //should cover all remaining functions for this class. if any more need to be added, push to this file in above manner.
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
