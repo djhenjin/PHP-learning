@@ -58,16 +58,25 @@ class Authentication
         else
         {
             if(isset($_GET['ref']))
-            {
-                $referrer = $_GET['ref'];
+            {   
+                $referID = $conn->prepare("SELECT id FROM users WHERE user = :referer");
+                $referID->bindParam(':referer', $_GET['ref']);
+                $referID->execute();
+                $results = $referID->fetch(PDO::FETCH_ASSOC);
+                $referer = $results['user'];
+                
             }
             else if(isset($_COOKIE['referrer']))
             {
-                $referrer = $_COOKIE['referrer'];
+                $referID = $conn->prepare("SELECT id FROM users WHERE user = :referer");
+                $referID->bindParam(':referer', $_COOKIE['referrer']);
+                $referID->execute();
+                $results = $referID->fetch(PDO::FETCH_ASSOC);
+                $referer = $results['user'];
             }
             else
             {
-                $referrer = 0;
+                $referer = 0;
             }
             $validationkey = sha1($usrinfo['0'].$this->randkey());
             $register = $conn->prepare ("INSERT INTO users (id,user, password, email, sessionid, validation) VALUES ('', :user, :pass, :email, '',:validationkey)");
