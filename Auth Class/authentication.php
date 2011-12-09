@@ -31,6 +31,13 @@ class Authentication
         }
    
     }
+    public function referrer()
+    {
+        if(isset($_GET['ref']))
+        {
+            setcookie("referrer", $_GET['ref'], 0, "/", "testing.thesprocketworld.com");
+        }
+    }
 
     public function register($usrinfo)
     {
@@ -50,7 +57,18 @@ class Authentication
         }
         else
         {
-            
+            if(isset($_GET['ref']))
+            {
+                $referrer = $_GET['ref'];
+            }
+            else if(isset($_COOKIE['referrer']))
+            {
+                $referrer = $_COOKIE['referrer'];
+            }
+            else
+            {
+                $referrer = 0;
+            }
             $validationkey = sha1($usrinfo['0'].$this->randkey());
             $register = $conn->prepare ("INSERT INTO users (id,user, password, email, sessionid, validation) VALUES ('', :user, :pass, :email, '',:validationkey)");
             $register->bindParam(':user', $usrinfo['0']);
