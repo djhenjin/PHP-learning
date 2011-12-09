@@ -36,7 +36,7 @@ class SiteSettings
 	if($Query->rowCount() == 1) {
 		$site = $Query->fetch(PDO::FETCH_OBJ);
 		if($site->DayViewLimit >= $site->ViewsToday) {
-			return "Viewing not possible anymore!"
+			return "Viewing not possible anymore!";
 		}
 		if($site->Balance > ($visitprice * ($site->ViewLength / 10))) {
 			$Query = $conn->prepare("SELECT * FROM users WHERE id = :UserID");

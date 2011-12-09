@@ -57,22 +57,14 @@ class Authentication
         }
         else
         {
-            if(isset($_GET['ref']))
+            if(isset($_GET['ref']) || $_COOKIE['referer']))
             {   
                 $referID = $conn->prepare("SELECT id FROM users WHERE user = :referer");
-                $referID->bindParam(':referer', $_GET['ref']);
+                $referID->bindParam(':referer', ((isset($_GET['ref']) ? $_GET['ref'] : $_COOKIE['referer']));
                 $referID->execute();
                 $results = $referID->fetch(PDO::FETCH_ASSOC);
                 $referer = $results['user'];
                 
-            }
-            else if(isset($_COOKIE['referrer']))
-            {
-                $referID = $conn->prepare("SELECT id FROM users WHERE user = :referer");
-                $referID->bindParam(':referer', $_COOKIE['referrer']);
-                $referID->execute();
-                $results = $referID->fetch(PDO::FETCH_ASSOC);
-                $referer = $results['user'];
             }
             else
             {
