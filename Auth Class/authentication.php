@@ -153,7 +153,7 @@ class Authentication
         } 
             for($i = 0; $i < 20; $i++) 
         { 
-            $key[$i] = mb_substr($options, $i, ($i + 1));
+            $key[$i] = mb_substr($options, $i, 1);
         }
         $key = implode($key);
         return $key;
